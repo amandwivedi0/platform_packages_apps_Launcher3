@@ -21,6 +21,7 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.content.Intent;
 import android.text.TextUtils;
 
 import com.android.launcher3.LauncherAppState;
@@ -29,6 +30,7 @@ import com.android.launcher3.R;
 import com.android.launcher3.Utilities;
 import com.android.launcher3.config.FeatureFlags;
 import com.android.launcher3.uioverrides.plugins.PluginManagerWrapper;
+import com.android.launcher3.trust.TrustAppsActivity;
 import com.android.launcher3.util.SecureSettingsObserver;
 
 import androidx.preference.Preference;
@@ -49,6 +51,8 @@ public class SettingsActivity extends Activity
     public static final String EXTRA_SHOW_FRAGMENT_ARGS = ":settings:show_fragment_args";
     private static final int DELAY_HIGHLIGHT_DURATION_MILLIS = 600;
     public static final String SAVE_HIGHLIGHTED_KEY = "android:preference_highlighted";
+    public static final String KEY_MINUS_ONE = "pref_enable_minus_one";
+    public static final String KEY_TRUST_APPS = "pref_trust_apps";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -151,6 +155,16 @@ public class SettingsActivity extends Activity
         protected boolean initPreference(Preference preference) {
             //switch (preference.getKey()) {
             //}
+            return true;
+        case KEY_MINUS_ONE:
+            return LauncherAppState.getInstanceNoCreate().isSearchAppAvailable();
+
+        case KEY_TRUST_APPS:
+            preference.setOnPreferenceClickListener(p -> {
+                Intent intent = new Intent(getActivity(), TrustAppsActivity.class);
+                startActivity(intent);
+                return true;
+            });
             return true;
         }
 
